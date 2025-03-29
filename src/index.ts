@@ -1,38 +1,26 @@
-import { PrismaClient } from "@prisma/client";
-
+import { PrismaClient, UserRole } from "@prisma/client";
 const prisma = new PrismaClient();
-
 const main = async () => {
-  //offset pagination
-  // const offsetData = await prisma.post.findMany({
-  //   skip: 5,
-  //   take: 2,
-  // });
-  // console.log(offsetData);
-  //cursor based pagination
-  // const cursorData = await prisma.post.findMany({
-  //   skip: 5,
-  //   take: 2,
-  //   cursor: {
-  //     id: 21,
-  //   },
-  // });
-  // console.log(cursorData);
-  // sorting
-  const sortedData = await prisma.post.findMany({
-    orderBy: {
-      id: "asc",
-    },
-    skip: 10,
-    take: 2,
-
-    where: {
-      title: {
-        contains: "Post Title",
+  const createPost = await prisma.post.create({
+    data: {
+      title: "Hello World",
+      content: "This is a sample post",
+      authorId: 1,
+      PostCategory: {
+        create: {
+          categoryId: 3,
+          // category: {
+          //   connect: {
+          //     id: 1,
+          //   },
+          // },
+        },
       },
     },
+    include: {
+      PostCategory: true,
+    },
   });
-  console.log(sortedData);
+  console.log(createPost);
 };
-
 main();
