@@ -1,21 +1,79 @@
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-const relationalQueries = async () => {
-  const result = await prisma.user.findUnique({
+const filtering = async () => {
+  const andFiltering = await prisma.post.findMany({
     where: {
-      id: 3,
+      AND: [
+        {
+          title: {
+            contains: "rongila",
+          },
+        },
+        { published: true },
+      ],
     },
   });
-  const publishedPostUsers = await prisma.user.findMany({
+  const orFiltering = await prisma.post.findMany({
+    where: {
+      OR: [
+        {
+          title: {
+            contains: "rongila",
+          },
+        },
+        { published: true },
+      ],
+    },
+  });
+
+  // console.log(orFiltering);
+  // console.log(andFiltering);
+  const notFiltering = await prisma.post.findMany({
+    where: {
+      NOT: [
+        {
+          title: {
+            contains: "rongila",
+          },
+        },
+        {
+          published: true,
+        },
+      ],
+    },
+  });
+  const startWith = await prisma.user.findMany({
+    where: {
+      email: {
+        startsWith: "user1",
+      },
+    },
+  });
+  const userNameArr = ["user1", "user2", "user3"];
+  const userNameByArr = await prisma.user.findMany({
+    where: {
+      username: {
+        in: userNameArr,
+      },
+    },
+  });
+  // console.log(userNameByArr);
+  const inDepthData = await prisma.user.findMany({
+    where: {
+      id: 1,
+    },
     include: {
       post: {
-        where: {
-          published: true,
+        include: {
+          PostCategory: {
+            include: { category: true },
+          },
         },
       },
     },
   });
-  console.log(result);
+  console.log(inDepthData);
+  // console.log(startWith);
 };
-relationalQueries();
+filtering();

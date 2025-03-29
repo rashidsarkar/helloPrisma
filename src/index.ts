@@ -1,33 +1,21 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
-const filtering = async () => {
-  const andFiltering = await prisma.post.findMany({
-    where: {
-      AND: [
-        {
-          title: {
-            contains: "rongila",
-          },
-        },
-        { published: true },
-      ],
+const prisma = new PrismaClient({
+  log: [
+    {
+      emit: "event",
+      level: "query",
     },
-  });
-  const orFiltering = await prisma.post.findMany({
-    where: {
-      OR: [
-        {
-          title: {
-            contains: "rongila",
-          },
-        },
-        { published: true },
-      ],
-    },
-  });
-
-  console.log(orFiltering);
-  console.log(andFiltering);
+  ],
+});
+prisma.$on("query", (e) => {
+  console.log(e.query);
+  // console.log("query:", e.query);
+  console.log("params:", e.params);
+  console.log("duration:", e.duration);
+});
+const main = async () => {
+  const getAllPost = await prisma.post.findMany({});
+  // console.log(getAllPost);
 };
-filtering();
+main();
