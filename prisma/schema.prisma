@@ -26,9 +26,9 @@ model User {
   username String   @unique
   email    String
   role     UserRole @default(user)
-
-  profile Profile?
-  post    Post[]
+  age      Int      @default(0)
+  profile  Profile?
+  post     Post[]
 
   @@map("users")
 }
