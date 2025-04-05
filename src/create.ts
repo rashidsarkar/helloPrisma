@@ -5,7 +5,7 @@ const main = async () => {
     data: {
       title: "Hello World",
       content: "This is a sample post",
-      authorId: 1,
+      authorId: 2,
       PostCategory: {
         create: [{ categoryId: 3 }, { categoryId: 4 }],
         // category: {
