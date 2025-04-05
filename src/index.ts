@@ -1,16 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient({
-  log: [
-    {
-      emit: "event",
-      level: "query",
+const prisma = new PrismaClient();
+const aggregates = async () => {
+  const avgAge = await prisma.user.aggregate({
+    _avg: {
+      age: true,
     },
-  ],
-});
-
-const main = async () => {
-  const getAllPost = await prisma.post.findMany({});
-  // console.log(getAllPost);
+  });
+  console.log(avgAge);
 };
-main();
+aggregates();
