@@ -1,20 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-const groupBy = async () => {
-  const groupPost = await prisma.post.groupBy({
-    by: ["published"],
-    _count: {
-      title: true,
-    },
-    having: {
-      authorId: {
-        _sum: {
-          gt: 2,
-        },
-      },
-    },
-  });
-  console.log(groupPost);
+
+const rawQuery = async () => {
+  const post = await prisma.$queryRaw`SELECT * FROM posts`;
+  console.log(post);
 };
-groupBy();
+rawQuery();
